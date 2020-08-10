@@ -1,16 +1,22 @@
+*,
+html,
+body {
+  box-sizing: border-box;
+}
+
 html,
 body {
   position: relative;
   width: 100%;
   height: 100%;
-}
-
-body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
 }
 
 .box {
@@ -18,6 +24,26 @@ body {
     0 0px 0 1px rgba(10, 10, 10, 0.02) !important;
 }
 
+.rel {
+  position: relative;
+}
+
+.h100 {
+  height: 100%;
+}
+
 .notification {
   padding: 1rem !important;
+}
+
+.ma-0 {
+  margin: 0 !important;
+}
+
+.ml-1 {
+  margin-left: 0.5rem;
+}
+
+.medium-icon {
+  font-size: 1.5rem;
 }

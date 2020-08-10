@@ -4,26 +4,22 @@
   import { myAlarms } from "../stores";
   import Navbar from "../components/Navbar.svelte";
   import AlarmCard from "../components/AlarmCard.svelte";
-  import AddAlarmModal from "./AddAlarmModal.svelte";
   import serverApi from "../utils/ServerApi";
   import { messaging } from "../utils/firebase";
+  import AddAlarmBySearch from "./AddAlarmBySearch.svelte";
+  import AddAlarmByList from "./AddAlarmByList.svelte";
+  import AddAlarmCard from "./AddAlarmCard.svelte";
+  import MyAlarms from "./MyAlarms.svelte";
+  import { loadMyAlarms } from "../api/alarm";
 
   const { addNotification } = getNotificationsContext();
-
-  $: disableAdd = $myAlarms.length >= 5;
-
-  const loadMyAlarms = async () => {
-    const token = await messaging.getToken();
-    const alarms = await serverApi.myAlarms(token);
-    myAlarms.set(alarms);
-  };
 
   const notifyDelete = () => {
     addNotification({
       text: "알람이 삭제됐습니다.",
       theme: "is-success",
       position: "bottom-right",
-      removeAfter: 3000
+      removeAfter: 3000,
     });
   };
 
@@ -32,72 +28,60 @@
       text: "hi",
       position: "top-center",
       theme: "is-warning",
-      removeAfter: 15000
+      removeAfter: 15000,
     });
   };
 
-  const notifyAlarm = notification => {
+  const notifyAlarm = (notification) => {
     addNotification({
       text: notification.title,
       position: "top-center",
       theme: "is-warning",
-      removeAfter: 15000
+      removeAfter: 15000,
     });
   };
 
-  messaging.onMessage(payload => {
+  messaging.onMessage((payload) => {
     console.log(payload);
     notifyAlarm(payload.notification);
     loadMyAlarms();
+    alarmCard.reloadLectures();
 
     document.getElementById("noti-sound").play();
   });
 
-  onMount(async () => {
-    await loadMyAlarms();
-    if ($myAlarms.length === 0) {
-      activateAddModal();
-    }
-  });
+  onMount(loadMyAlarms);
 
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible") loadMyAlarms();
   });
 
-  let activeModal = false;
-
-  const activateAddModal = () => {
-    activeModal = true;
-  };
-
-  const closeModal = () => {
-    activeModal = false;
-  };
-
-  const onAlarmDelete = async e => {
+  const onAlarmDelete = async (e) => {
     const lectureId = e.detail.id;
     const token = await messaging.getToken();
     const alarms = await serverApi.deleteAlarm(token, lectureId);
     myAlarms.set(alarms);
     notifyDelete();
   };
+
+  const onLectureSelected = () => {};
+
+  let alarmCard;
 </script>
 
 <style>
   .container-offset {
     padding-top: 52px;
-    margin: 16px;
+    margin: 0;
+    padding: 68px 32px 0 32px;
   }
 </style>
 
-<Navbar onClickAdd={activateAddModal} {disableAdd} />
+<Navbar />
 
 <div class="container is-fluid container-offset">
-  <div class="title is-4">내가 등록한 알람 {$myAlarms.length} / 5개</div>
-  <div class="columns is-tablet is-multiline">
-    {#each $myAlarms as alarm}
-      <AlarmCard {alarm} on:delete={onAlarmDelete} />
-    {/each}
+  <div class="columns">
+    <MyAlarms {onAlarmDelete} />
+    <AddAlarmCard bind:this={alarmCard} />
   </div>
-  <AddAlarmModal active={activeModal} on:close={closeModal} />
 </div>

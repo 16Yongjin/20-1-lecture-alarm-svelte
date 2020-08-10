@@ -2,20 +2,20 @@
   import LectureCard from "../components/LectureCard.svelte";
   import serverApi from "../utils/ServerApi";
 
-  export let onLectureSelected;
-  export let selectedLectureId;
-
   let lectures = [];
 
+  let query = "";
   let timer;
 
-  const debounceQuery = query => {
+  const debounceQuery = () => {
     clearTimeout(timer);
     timer = setTimeout(async () => {
       if (!query) return;
       lectures = await serverApi.searchLectures(query);
     }, 300);
   };
+
+  export const reloadLectures = () => debounceQuery();
 </script>
 
 <section class="modal-card-body">
@@ -23,7 +23,8 @@
   <div class="field">
     <div class="control">
       <input
-        on:keyup={({ target: { value } }) => debounceQuery(value)}
+        bind:value={query}
+        on:keyup={debounceQuery}
         class="input is-primary is-medium is-flex"
         type="text"
         placeholder="강의명이나 교수명을 입력하세요." />
@@ -35,7 +36,7 @@
   {/if}
 
   {#each lectures as lecture}
-    <LectureCard {lecture} {selectedLectureId} {onLectureSelected} />
+    <LectureCard {lecture} {reloadLectures} />
   {/each}
 
 </section>

@@ -3,32 +3,35 @@
   import courseMap from "../data/courses.js";
   import serverApi from "../utils/ServerApi";
 
-  export let onLectureSelected;
-  export let selectedLectureId;
-
   let campusSelect = "서울";
   let courseSelect = "전공";
-  let selectedDepartment = "";
+  let department = "ATMB3_H1";
   let lectures = [];
 
-  const resetModal = () => {
-    (selectedDepartment = ""), (lectures = []), onLectureSelected(null);
+  const loadLectures = async () => {
+    console.log("reloadLectures");
+    lectures = await serverApi.findLectures(department);
   };
 
-  const loadLectures = async () => {
-    if (!selectedDepartment) return;
-
-    lectures = await serverApi.findLectures(selectedDepartment);
+  const setDepartment = () => {
+    department = courses[0][1];
   };
 
   $: courseMapSelect = campusSelect + courseSelect;
   $: courses = courseMap[courseMapSelect];
-  $: courseMapSelect, resetModal();
-  $: selectedDepartment, onLectureSelected(null), loadLectures();
+  $: courseMapSelect, setDepartment();
+  $: department, loadLectures();
+
+  export const reloadLectures = () => loadLectures();
 </script>
 
-<section class="modal-card-body">
+<style>
+  .full-height {
+    height: calc(100vh - 167px);
+  }
+</style>
 
+<section class="modal-card-body full-height">
   <div class="level is-mobile">
     <div class="level-right">
       <div class="level-item">
@@ -88,10 +91,7 @@
   <div class="level">
     <div class="level-item">
       <div class="select is-rounded" style="width: 100%;">
-        <select bind:value={selectedDepartment} style="width: 100%;">
-          <option disabled selected value="">
-            {courseSelect}를 선택하세요.
-          </option>
+        <select bind:value={department} style="width: 100%;">
           {#each courses as course}
             <option value={course[1]}>{course[0]}</option>
           {/each}
@@ -101,7 +101,7 @@
   </div>
 
   {#each lectures as lecture}
-    <LectureCard {lecture} {selectedLectureId} {onLectureSelected} />
+    <LectureCard {lecture} {reloadLectures} />
   {/each}
 
 </section>

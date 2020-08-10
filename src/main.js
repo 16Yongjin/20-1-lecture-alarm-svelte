@@ -4,7 +4,7 @@ import "animate.css/animate.css";
 import "./utils/firebase";
 
 const app = new App({
-  target: document.body
+  target: document.body,
 });
 
 export default app;

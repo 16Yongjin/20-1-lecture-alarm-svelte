@@ -5,7 +5,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyD4tn_AXY6q-RfIqhD26HAxnsnTy5xlQo4",
   projectId: "lecturealer",
   messagingSenderId: "99989017353",
-  appId: "1:99989017353:web:cc519002d9097f3c67f9d8"
+  appId: "1:99989017353:web:cc519002d9097f3c67f9d8",
 };
 
 firebase.initializeApp(firebaseConfig);
