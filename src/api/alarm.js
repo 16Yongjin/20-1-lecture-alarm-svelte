@@ -12,7 +12,12 @@ export const loadMyAlarms = async () => {
 }
 
 export const addAlarm = async (lectureId) => {
-  await serverApi.addAlarm(lectureId)
+  try {
+    await serverApi.addAlarm(lectureId)
+  } catch (e) {
+    alert('알람은 20개까지만 등록할 수 있어요.')
+  }
+
   return loadMyAlarms()
 }
 

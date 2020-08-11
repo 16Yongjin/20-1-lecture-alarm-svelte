@@ -1,5 +1,6 @@
 <script>
   import { createEventDispatcher } from "svelte";
+  import { slide } from "svelte/transition";
   import Icon from "fa-svelte";
   import { faTrash } from "@fortawesome/free-solid-svg-icons/faTrash";
   import { deleteAlarm } from "../api/alarm";
@@ -18,7 +19,7 @@
   }
 </style>
 
-<div class="column is-6 is-fullwidth-tablet">
+<div class="column is-6 is-fullwidth-tablet" transition:slide>
   <div class="box h100">
     <div class="media">
       <div class="media-content">

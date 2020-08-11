@@ -47,3 +47,13 @@ body {
 .medium-icon {
   font-size: 1.5rem;
 }
+
+.modal-card-body {
+  height: calc(100vh - 167px);
+}
+
+@media screen and (max-width: 768px), print {
+  .modal-card-body {
+    height: calc(100vh - 248px);
+  }
+}

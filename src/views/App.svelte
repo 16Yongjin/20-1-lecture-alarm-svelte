@@ -6,82 +6,46 @@
   import AlarmCard from "../components/AlarmCard.svelte";
   import serverApi from "../utils/ServerApi";
   import { messaging } from "../utils/firebase";
+  import { onVisibile } from "../utils";
   import AddAlarmBySearch from "./AddAlarmBySearch.svelte";
   import AddAlarmByList from "./AddAlarmByList.svelte";
   import AddAlarmCard from "./AddAlarmCard.svelte";
   import MyAlarms from "./MyAlarms.svelte";
   import { loadMyAlarms } from "../api/alarm";
 
-  const { addNotification } = getNotificationsContext();
-
-  const notifyDelete = () => {
-    addNotification({
-      text: "알람이 삭제됐습니다.",
-      theme: "is-success",
-      position: "bottom-right",
-      removeAfter: 3000,
-    });
-  };
-
-  const notifyAlarm2 = () => {
-    addNotification({
-      text: "hi",
-      position: "top-center",
-      theme: "is-warning",
-      removeAfter: 15000,
-    });
-  };
-
-  const notifyAlarm = (notification) => {
-    addNotification({
-      text: notification.title,
-      position: "top-center",
-      theme: "is-warning",
-      removeAfter: 15000,
-    });
-  };
-
   messaging.onMessage((payload) => {
     console.log(payload);
     notifyAlarm(payload.notification);
     loadMyAlarms();
-    alarmCard.reloadLectures();
 
     document.getElementById("noti-sound").play();
   });
 
   onMount(loadMyAlarms);
 
-  document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible") loadMyAlarms();
-  });
+  onVisibile(loadMyAlarms);
 
-  const onAlarmDelete = async (e) => {
-    const lectureId = e.detail.id;
-    const token = await messaging.getToken();
-    const alarms = await serverApi.deleteAlarm(token, lectureId);
-    myAlarms.set(alarms);
-    notifyDelete();
-  };
+  let width;
+  let showOnMobile = false;
 
-  const onLectureSelected = () => {};
+  const openModal = () => (showOnMobile = true);
+  const closeModal = () => (showOnMobile = false);
 
-  let alarmCard;
+  $: width > 768 && closeModal();
 </script>
 
 <style>
   .container-offset {
-    padding-top: 52px;
-    margin: 0;
-    padding: 68px 32px 0 32px;
+    padding-top: 68px;
+    margin-bottom: -16px;
   }
 </style>
 
-<Navbar />
+<Navbar on:openModal={openModal} />
 
-<div class="container is-fluid container-offset">
+<div class="container is-fluid container-offset" bind:clientWidth={width}>
   <div class="columns">
-    <MyAlarms {onAlarmDelete} />
-    <AddAlarmCard bind:this={alarmCard} />
+    <MyAlarms />
+    <AddAlarmCard {showOnMobile} on:close={closeModal} />
   </div>
 </div>

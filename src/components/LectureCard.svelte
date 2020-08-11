@@ -4,11 +4,10 @@
   import { faTrash } from "@fortawesome/free-solid-svg-icons/faTrash";
   import { addAlarm, deleteAlarm } from "../api/alarm";
 
-  export let reloadLectures;
   export let lecture;
 
-  const onAlarmAdd = () => addAlarm(lecture.id).then(reloadLectures);
-  const onAlarmDelete = () => deleteAlarm(lecture.id).then(reloadLectures);
+  const onAlarmAdd = () => addAlarm(lecture.id);
+  const onAlarmDelete = () => deleteAlarm(lecture.id);
 </script>
 
 <style>

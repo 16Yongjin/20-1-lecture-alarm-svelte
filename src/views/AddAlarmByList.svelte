@@ -25,12 +25,6 @@
   export const reloadLectures = () => loadLectures();
 </script>
 
-<style>
-  .full-height {
-    height: calc(100vh - 167px);
-  }
-</style>
-
 <section class="modal-card-body full-height">
   <div class="level is-mobile">
     <div class="level-right">
@@ -101,7 +95,7 @@
   </div>
 
   {#each lectures as lecture}
-    <LectureCard {lecture} {reloadLectures} />
+    <LectureCard {lecture} />
   {/each}
 
 </section>

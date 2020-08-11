@@ -18,7 +18,7 @@
   export const reloadLectures = () => debounceQuery();
 </script>
 
-<section class="modal-card-body">
+<section class="modal-card-body full-height">
 
   <div class="field">
     <div class="control">
@@ -36,7 +36,7 @@
   {/if}
 
   {#each lectures as lecture}
-    <LectureCard {lecture} {reloadLectures} />
+    <LectureCard {lecture} />
   {/each}
 
 </section>

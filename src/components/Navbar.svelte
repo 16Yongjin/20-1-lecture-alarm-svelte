@@ -1,3 +1,15 @@
+<script>
+  import { createEventDispatcher } from "svelte";
+  import Icon from "fa-svelte";
+  import { faPlus } from "@fortawesome/free-solid-svg-icons/faPlus";
+
+  const dispatch = createEventDispatcher();
+
+  const emitOpenModal = () => {
+    dispatch("openModal");
+  };
+</script>
+
 <style>
   .bottom-shadow {
     box-shadow: 0 2px 5px grey;
@@ -19,5 +31,15 @@
         height="28" />
     </a>
     <p class="level-item title is-4">강의 빈자리 알람</p>
+  </div>
+
+  <div class="level-right navbar-item is-hidden-tablet">
+    <p class="level-item">
+      <button class="button" on:click={emitOpenModal}>
+        <span class="icon is-large">
+          <Icon icon={faPlus} />
+        </span>
+      </button>
+    </p>
   </div>
 </nav>
