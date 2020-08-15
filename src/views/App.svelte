@@ -13,9 +13,18 @@
   import MyAlarms from "./MyAlarms.svelte";
   import { loadMyAlarms } from "../api/alarm";
 
+  const { addNotification } = getNotificationsContext();
+
+  const notifyAlarm = (text) =>
+    addNotification({
+      text,
+      type: "success",
+      position: "bottom-left",
+    });
+
   messaging.onMessage((payload) => {
-    console.log(payload);
-    notifyAlarm(payload.notification);
+    console.log(payload, payload.notification.title);
+    notifyAlarm(payload.notification.title);
     loadMyAlarms();
 
     document.getElementById("noti-sound").play();

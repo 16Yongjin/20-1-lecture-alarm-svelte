@@ -1,8 +1,16 @@
 import { messaging } from './firebase'
 
 class ServerApi {
-  getUserId() {
-    return messaging.getToken()
+  async getUserId() {
+    const token = await messaging.getToken()
+
+    console.log('token', token)
+
+    if (!token) {
+      throw new Error('브라우저 알람을 허용해주세요.')
+    }
+
+    return token
   }
 
   request(...args) {
@@ -18,6 +26,7 @@ class ServerApi {
 
   async myAlarms() {
     const userId = await this.getUserId()
+
     return this.request(`${this.baseUrl}/v1/users/${userId}`)
   }
 
@@ -26,6 +35,7 @@ class ServerApi {
     const headers = { 'Content-Type': 'application/json' }
     const body = JSON.stringify({ userId, lectureId })
 
+    console.log('userId', userId)
     return this.request(`${this.baseUrl}/v1/users`, {
       method: 'POST',
       headers,
@@ -58,7 +68,7 @@ class ServerApi {
   }
 }
 
-// const serverApi = new ServerApi("https://premium.api.lecture.hufs.app");
-const serverApi = new ServerApi('http://localhost:3000')
+const serverApi = new ServerApi('https://api.lecture.hufs.app')
+// const serverApi = new ServerApi('http://localhost:3000')
 
 export default serverApi

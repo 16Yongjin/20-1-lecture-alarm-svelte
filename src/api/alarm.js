@@ -6,16 +6,20 @@ let reloadLectures = () => {}
 export const setReloadLectures = (f) => (reloadLectures = f)
 
 export const loadMyAlarms = async () => {
-  const alarms = await serverApi.myAlarms()
-  myAlarms.set(alarms)
-  reloadLectures()
+  try {
+    const alarms = await serverApi.myAlarms()
+    myAlarms.set(alarms)
+    reloadLectures()
+  } catch (e) {
+    alert(e.message)
+  }
 }
 
 export const addAlarm = async (lectureId) => {
   try {
     await serverApi.addAlarm(lectureId)
   } catch (e) {
-    alert('알람은 20개까지만 등록할 수 있어요.')
+    alert(e.message)
   }
 
   return loadMyAlarms()
